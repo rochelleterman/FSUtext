@@ -1,0 +1,73 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Example code in package build process
+*-Ex.R
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# Dropbox
+.DS_*
+
+# Latex
+*.aux
+*.glo
+*.idx
+*.log
+*.toc
+*.ist
+*.acn
+*.acr
+*.alg
+*.bbl
+*.blg
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.txt
+*.tex
+
+# Images
+*.jpg
+*.jpeg
+*.png
+
+
+# Random
+topics1.pdf
+topics2.pdf
+region-plot.pdf
+Doc1.pdf
+Doc2.pdf
+Doc3.pdf
+Doc4.pdf
+Fig1.pdf
+Fig2.pdf
+Fig3.pdf
+Fig4.pdf
+Length1.pdf
+Length2.pdf
+Length3.pdf
+Length4.pdf
+
+# Except
+!03_Distinctive_Words/British-Fiction/*.txt
+!03_Distinctive_Words/British-Fiction/
