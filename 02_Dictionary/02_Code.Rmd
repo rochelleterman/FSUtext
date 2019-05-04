@@ -1,7 +1,7 @@
 ---
-title: "Dictionary Methods"
-author: "BigSurv Text Analysis"
-date: "October 2018"
+title: "Dictionary Methods: Key"
+author: "Introduction to Text Analysis"
+date: "May 2019"
 output: html_document
 ---
 
@@ -10,34 +10,34 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## 1. Comparing Songs on the Thriller Album
+## 1. Comparing Songs from Taylor Swift's catalogue
 
-To demonstrate sentiment analysis, we're going to explore lyrics from Michael Jackson's Thriller album. 
+To demonstrate sentiment analysis, we're going to explore lyrics from Taylor Swift songs. 
 
 Road the code below to get started.
 
 ```{r}
 rm(list=ls())
-setwd('~/YOUR/PATH/DIR/02_Dictionary')
+setwd('~/YOUR/PATH/HERE/02_Dictionary')
 library(tm)
 library(tidytext)
 
-thriller <- read.csv("thriller.csv")
+ts <- read.csv("taylor_swift.csv")
 ```
 
 ## 1.1 
 
-First we must preprocess the corpus. Create a document-term matrix from the `Lyrics` column of the `thriller` data frame. Complete the following preprocessing steps:
+First we must preprocess the corpus. Create a document-term matrix from the `lyrics` column of the `ts` data frame. Complete the following preprocessing steps:
 - convert to lower
 - remove stop words
 - remove numbers
 - remove punctuation.
 
-**Think**: Why do you think stemming is inappropriate for this application?
+**Think**: Why is stemming inappropriate for this application?
 
 ```{r}
 # preprocess and create DTM
-docs <- Corpus(VectorSource(thriller$Lyrics))
+docs <- Corpus(VectorSource(ts$lyrics))
 
 dtm <- DocumentTermMatrix(docs,
            control = list(tolower = TRUE,
@@ -45,7 +45,7 @@ dtm <- DocumentTermMatrix(docs,
                           removePunctuation = TRUE,
                           stopwords = TRUE
                          ))
-# convert to matrix, and from there convert again to data frame
+
 dtm <- as.data.frame(as.matrix(dtm))
 ```
 
@@ -68,7 +68,7 @@ Add a column to `sent` called `score`. This column should hold a "1" for positiv
 sent$score <- ifelse(sent$sentiment=="positive", 1, -1)
 ```
 
-## 3. Scoring the Thriller album
+## 3. Scoring the songs
 
 ## 3.1 
 
@@ -94,19 +94,19 @@ head(words)
 
 ## 3.2
 
-We can now use matrix algebra to multiply our dtm by the scoring vector. This will return to us a score for each document (i.e., song).
+We can now use matrix algebra (!!) to multiply our dtm by the scoring vector. This will return to us a score for each document (i.e., song).
 
 ```{r}
 # calculate documents scores with matrix algebra! 
 scores <- as.matrix(dtm) %*% words$score
 
 # put it in the original documents data frame
-thriller$sentiment <- scores
+ts$sentiment <- scores
 ```
 
 Which song is happiest? Go listen to the song and see if you agree.
 
-## 4. **Challenge:** Making a function
+## 4. Making a function
 
 ## 4.1 
 
@@ -118,23 +118,29 @@ sentiment_score <- function(texts, sent_dict){
   # YOUR CODE HERE
   
   return(scores)
-  
 }
-
-# uncomment the line below to test it out!
-# sentiment_score(thriller$Lyrics, sent)
+  
+# test it out!
+sentiment_score(ts$lyrics, sent)
 ```
 
 ## 4.2 
 
-Using the function you wrote above, score the Thriller album with the "afinn" dictionary. Compare the scores across the two different dictionaries.
+Using the function you wrote above, find out what the most and least positive Taylor Swift album is.
 
 ```{r}
+# concatenate to make albums
+albums <- ts %>% group_by(album) %>%
+  summarise(lyrics = paste0(lyrics, collapse = ";"))
+
 # first load the dictionary
 afinn <- get_sentiments("afinn")
 head(afinn)
 
 # then run the function
-sentiment_score(thriller$Lyrics, afinn)
+sentiment_score(albums$lyrics, afinn)
+
+# add to original df
+albums$sent <- sentiment_score(albums$lyrics, afinn)
 ```
 
