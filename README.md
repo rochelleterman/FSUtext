@@ -20,3 +20,10 @@ This course is geared towards social scientists who work with unstructured text 
 ### About the Instructor
 
 Rochelle Terman is currently a Provost Postdoctoral Fellow in the Department of Political Science at University of Chicago, where she will begin as Assistant Professor in 2020. Her research examines international norms, gender, and advocacy, with a focus on the Muslim world using a mix of quantitative, qualitative, and computational methods. She also teaches computational social science in a variety of capacities.
+
+### Acknowledgments
+
+This course adapts materials from the following organizations and individuals. Thank you!
+
+*   [Justin Grimmmer](http://www.justingrimmer.org/)
+*   [Allen Riddell](http://de.dariah.eu/tatom/)
