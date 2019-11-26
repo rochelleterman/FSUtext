@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Download and install the following packages to get started:
 
 ```{r}
-setwd('~/YOUR/PATH/DIR/03_Distinctive_Words')
+setwd('~/Google\ Drive/Teaching/FSUtext/03_Distinctive_Words')
 rm(list=ls())
 require(tm)
 require(matrixStats) # for statistics
@@ -24,20 +24,20 @@ require(matrixStats) # for statistics
 
 ## 1. 2
 
-Today we're going to find distinctive words in the novels of two authors: Jane Austen and Charlotte Brontë.
+Today we're going to find distinctive words in the speeches of Obama and Trump.
 
 Run the following code to:
-1. Import the British Fiction corpus
+1. Import the corpus
 2. Create a DTM
 
 ```{r}
 # import corpus
-docs <- Corpus(DirSource("British-Fiction"))
+docs <- Corpus(DirSource("trump_obama"))
 
 # preprocess and create DTM
 dtm <- DocumentTermMatrix(docs,
-           control = list(stopwords = T,
-                          tolower = TRUE,
+           control = list(tolower = TRUE,
+                          stopwords = T,
                           removeNumbers = TRUE,
                           removePunctuation = TRUE,
                           stemming=TRUE))
@@ -55,35 +55,35 @@ Oftentimes scholars will want to compare different corpora by finding the words 
 
 ### 2.1 Unique usage
 
-The most obvious definition of distinctive is "exclusive". That is, distinctive words are those are found exclusively in texts associated with a single author (or group). For example, if Brontë uses the word “access” and Austen never does, we should count “access” as distinctive. 
+The most obvious definition of distinctive is "exclusive". That is, distinctive words are those are found exclusively in texts associated with a single author (or group). For example, if Brontë uses the word “access” and obama never does, we should count “access” as distinctive. 
 
 Finding words that are exclusive to a group is a simple exercise. All we have to do is sum the usage of each word use across all texts for each author, and then look for cases where the sum is zero for one author.
 
 ```{r}
 # turn DTM into dataframe
 dtm.m <- as.data.frame(as.matrix(dtm))
-dtm.m[,1:5]
+dtm.m$that <- NULL # fix weird stopword issue.
 
 # Subset into 2 dtms for each author
-austen <- dtm.m[1:3,]
-bronte <- dtm.m[4:6,]
+obama <- dtm.m[1:8,]
+trump <- dtm.m[9:11,]
 
 # Sum word usage counts across all texts
-austen <- colSums(austen)
-bronte <- colSums(bronte)
+obama <- colSums(obama)
+trump <- colSums(trump)
 
 # Put those sums back into a dataframe
-df <- data.frame(rbind(austen,bronte))
+df <- data.frame(rbind(obama,trump))
 df[,1:5]
 
 # Get words where one author's usage is 0
-solelyAusten <- unlist(df[1,bronte==0]) 
-solelyAusten <- solelyAusten[order(solelyAusten, decreasing = T)] # order them by frequency
-head(solelyAusten, 10) # get top 10 words for Austen
+solelyobama <- unlist(df[1,trump==0]) 
+solelyobama <- solelyobama[order(solelyobama, decreasing = T)] # order them by frequency
+head(solelyobama, 10) # get top 10 words for obama
 
-solelyBronte <- unlist(df[2,austen==0])
-solelyBronte <- solelyBronte[order(solelyBronte, decreasing = T)] # order them by frequency
-head(solelyBronte, 10) # get top 10 words for Bronte
+solelytrump <- unlist(df[2,obama==0])
+solelytrump <- solelytrump[order(solelytrump, decreasing = T)] # order them by frequency
+head(solelytrump, 10) # get top 10 words for trump
 ```
 
 ### 2.2 Removing unique words
@@ -92,7 +92,7 @@ As we can see, these words tend not to be terribly interesting or informative. S
 
 ```{r}
 # subset df with non-zero entries
-df <- df[,bronte>0 & austen>0]
+df <- df[,trump>0 & obama>0]
 
 # how many words are we left with?
 ncol(df)
@@ -105,15 +105,15 @@ Another basic approach to identifying distinctive words is to compare the freque
 
 ```{r}
 # take the differences in frequences
-diffFreq <- austen - bronte
+diffFreq <- obama - trump
 
 # sort the words
 diffFreq <- sort(diffFreq, decreasing = T)
 
-# the top Austen words
+# the top obama words
 head(diffFreq, 10)
 
-# the top Bronte words
+# the top trump words
 tail(diffFreq, 10)
 ```
 
@@ -137,17 +137,17 @@ df <- df/rowTotals #change frequencies to proportions
 df[,1:5]
 
 # get difference in proportions
-means.austen <- df[1,]
-means.bronte <- df[2,]
-score <- unlist(means.austen - means.bronte)
+means.obama <- df[1,]
+means.trump <- df[2,]
+score <- unlist(means.obama - means.trump)
 
 # find words with highest difference
 score <- sort(score, decreasing = T)
-head(score,10) # top austen words
-tail(score,10) # top bronte words
+head(score,10) # top obama words
+tail(score,10) # top trump words
 ```
 
-This is a start. The problem with this measure is that it tends to highlight differences in very frequent words. For example, this method gives greater attention to a word that occurs 30 times per 1,000 words in Austen and 25 times per 1,000 in Brontë than it does to a word that occurs 5 times per 1,000 words in Austen and 0.1 times per 1,000 words in Brontë. This does not seem right. It seems important to recognize cases when one author uses a word frequently and another author barely uses it.
+This is a start. The problem with this measure is that it tends to highlight differences in very frequent words. For example, this method gives greater attention to a word that occurs 30 times per 1,000 words in obama and 25 times per 1,000 in Brontë than it does to a word that occurs 5 times per 1,000 words in obama and 0.1 times per 1,000 words in Brontë. This does not seem right. It seems important to recognize cases when one author uses a word frequently and another author barely uses it.
 
 As this initial attempt suggests, identifying distinctive words will be a balancing act. When comparing two groups of texts, differences in the rates of frequent words will tend to be large relative to differences in the rates of rarer words. Human language is variable; some words occur more frequently than others regardless of who is writing. We need to find a way of adjusting our definition of distinctive in light of this.
 
@@ -160,10 +160,10 @@ One adjustment that is easy to make is to divide the difference in authors’ av
 means.all <- colMeans(df)
 
 # now divide the difference in authors' rates by the average rate across all authors
-score <- unlist((means.austen - means.bronte) / means.all)
+score <- unlist((means.obama - means.trump) / means.all)
 score <- sort(score, decreasing = T)
-head(score,10) # top austen words
-tail(score,10) # top bronte words
+head(score,10) # top obama words
+tail(score,10) # top trump words
 ```
 
 

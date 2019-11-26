@@ -18,7 +18,7 @@ Road the code below to get started.
 
 ```{r}
 rm(list=ls())
-setwd('~/YOUR/PATH/HERE/02_Dictionary')
+setwd('~/Google\ Drive/Teaching/FSUtext/02_Dictionary')
 library(tm)
 library(tidytext)
 

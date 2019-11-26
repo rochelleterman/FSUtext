@@ -15,7 +15,7 @@ First let's load our required packages.
 
 ```{r}
 rm(list=ls())
-setwd('~YOUR/PATH/HERE/01_Preprocessing')
+setwd('~/Google\ Drive/Teaching/FSUtext/01_Preprocessing')
 library(tm) # Framework for text mining
 library(dplyr) # Data preparation and pipes $>$
 library(ggplot2) # for plotting word frequencies
@@ -41,6 +41,7 @@ Here we'll be reading documents from a csv file. Each row being a document, and 
 
 ```{r}
 docs.df <-read.csv("mach.csv", header=TRUE) #read in CSV file
+# docs.df$text <- Encoding("UTF-8")
 docs <- Corpus(VectorSource(docs.df$text))
 docs
 ```
@@ -78,7 +79,6 @@ dtm <- DocumentTermMatrix(docs,
 ### 1.3 Weighting
 
 One common pre-processing step that some applicaitons may call for is applying tf-idf weights. The [tf-idf](https://en.wikipedia.org/wiki/Tf%E2%80%93idf), or term frequency-inverse document frequency, is a weight that ranks the importance of a term in its contextual document corpus. The tf-idf value increases proportionally to the number of times a word appears in the document, but is offset by the frequency of the word in the corpus, which helps to adjust for the fact that some words appear more frequently in general. In other words, it places importance on terms frequent in the document but rare in the corpus.
-
 
 ```{r}
 dtm.weighted <- DocumentTermMatrix(docs,
@@ -160,7 +160,7 @@ The TM package has lots of useful functions to help you explore common words and
 
 ```{r}
 # Have a look at common words
-findFreqTerms(dtm, lowfreq=100) # words that appear at least 100 times
+findFreqTerms(dtm, lowfreq=50) # words that appear at least 100 times
 
 # Which words correlate with "war"?
 findAssocs(dtm, "war", 0.3)
@@ -194,7 +194,7 @@ First create an object that converts the `dtm` to a dataframe (we first have to 
 ```{r}
 # coerce into dataframe
 dtm <- as.data.frame(as.matrix(dtm))
-names(docs)  # names of documents
+names(dtm)  # names of documents
 ```
 
 ### 3.2

@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Download and install the following packages to get started:
 
 ```{r}
-setwd('~/YOUR/DIRECTORY/PATH/04_Distance')
+setwd('~/Google\ Drive/Teaching/FSUtext/04_Distance')
 rm(list=ls())
 require(tm)
 require(lsa)
@@ -132,7 +132,9 @@ cos.dist <- as.matrix(1-cos.sim)
 Using the techniques you learned above, use `sapply` to calculate the most similar document for each email.
 
 ```{r}
-sapply(indices, get.closest, matrix = cos.dist)
+sum(sapply(indices, get.closest, matrix = cos.dist) == sapply(indices, get.closest, matrix = euclid.dist))
+
+
 ```
 
 ## 4. Visualizing distance with MDS
@@ -167,5 +169,13 @@ rowSums(flake_matrix)[150]
 Edit the code above to visualize the documents according to the cosine metric. Why do you think the visualizations differ so much? Which one provides a better visualization of potential clusters?
 
 ```{r}
-#YOUR CODE HERE
+# fit the scale
+fit <- cmdscale(cos.dist, eig=TRUE, k=2) # k is the number of dim
+
+# plot solution 
+x <- fit$points[,1]
+y <- fit$points[,2]
+plot(x, y, xlab="Coordinate 1", ylab="Coordinate 2", 
+  main="Metric	MDS",	type="n")
+text(x, y, labels = 1:nrow(flake_matrix), cex=.7)
 ```

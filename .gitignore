@@ -71,3 +71,5 @@ Length4.pdf
 # Except
 !03_Distinctive_Words/British-Fiction/*.txt
 !03_Distinctive_Words/British-Fiction/
+!05_Clustering/Flake-Press-Releases
+!05_Clustering/Flake-Press-Releases/*.txt

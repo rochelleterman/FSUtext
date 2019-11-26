@@ -176,6 +176,8 @@ setwd('Flake-Press-Releases')
 Looking at the files, what is cluster 2 about?  
 
 ```{r}
+setwd('Flake-Press-Releases')
+
 # what does the following two lines of code do? How does the syntax work?
 file.show(rownames(flake_matrix)[which(k_cluster$cluster==2)[11]])
 file.show(rownames(flake_matrix)[which(k_cluster$cluster==2)[20]])
