@@ -27,3 +27,10 @@ This course adapts materials from the following organizations and individuals. T
 
 *   [Justin Grimmmer](http://www.justingrimmer.org/)
 *   [Allen Riddell](http://de.dariah.eu/tatom/)
+
+![Creative Commons License](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)
+
+This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+
+
